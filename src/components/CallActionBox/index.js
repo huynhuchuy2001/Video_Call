@@ -1,29 +1,42 @@
-import React, {useState} from 'react';
+import React, {useState,useCallback} from 'react';
 import {View, StyleSheet, Pressable} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {Voximplant} from 'react-native-voximplant';
+const CameraManager = Voximplant.Hardware.CameraManager.getInstance();
+const cameraType = Voximplant.Hardware.CameraType;
 
 const CallActionBox = ({onHangupPress}) => {
   const [isCameraOn, setIsCameraOn] = useState(true);
   const [isMicOn, setIsMicOn] = useState(true);
-  const [isReverseCamera, setIsReverseCamera] = useState(true);
-
+  const [isReverseCamera, setIsReverseCamera] = useState('front');
   const onReverseCamera = () => {
     setIsReverseCamera(currentValue => !currentValue);
+    if (isReverseCamera === cameraType.FRONT) {
+      CameraManager.switchCamera(cameraType.BACK);
+      setIsReverseCamera(cameraType.BACK);
+    } else {
+      CameraManager.switchCamera(cameraType.FRONT);
+      setIsReverseCamera(cameraType.FRONT);
+    }
   };
 
   const onToggleCamera = () => {
     setIsCameraOn(currentValue => !currentValue);
+    if (isCameraOn) {
+      CameraManager.off;
+    } else {
+      CameraManager.on;
+    }
   };
-
+  console.log(CameraManager)
   const onToggleMicrophone = () => {
     setIsMicOn(currentValue => !currentValue);
   };
-
   return (
     <View style={styles.buttonsContainer}>
       <Pressable onPress={onReverseCamera} style={styles.iconButton}>
-        <Ionicons name={isReverseCamera ? 'ios-camera-reverse-sharp' : "md-camera-reverse-outline"} size={30} color={'white'} />
+        <Ionicons name={isReverseCamera==='front' ? 'ios-camera-reverse-sharp' : "md-camera-reverse-outline"} size={30} color={'white'} />
       </Pressable>
 
       <Pressable onPress={onToggleCamera} style={styles.iconButton}>

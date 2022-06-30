@@ -143,7 +143,6 @@ const CallingScreen = () => {
   const onHangupPress = () => {
     call.current.hangup();
   };
-
   return (
     <View style={styles.page}>
       <Pressable onPress={goBack} style={styles.backButton}>
